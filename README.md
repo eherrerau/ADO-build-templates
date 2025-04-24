@@ -1,20 +1,62 @@
-# Introduction 
-TODO: Give a short introduction of your project. Let this section explain the objectives or the motivation behind this project. 
+# ADO Build Templates
 
-# Getting Started
-TODO: Guide users through getting your code up and running on their own system. In this section you can talk about:
-1.	Installation process
-2.	Software dependencies
-3.	Latest releases
-4.	API references
+This repository contains a collection of Azure DevOps (ADO) build templates designed to streamline and standardize CI/CD pipelines. These templates follow Azure best practices to ensure efficient, secure, and scalable workflows.
 
-# Build and Test
-TODO: Describe and show how to build your code and run the tests. 
+## Features
 
-# Contribute
-TODO: Explain how other users and developers can contribute to make your code better. 
+- **Reusable Templates**: Modular and reusable YAML templates for various build and release scenarios.
+- **Azure Best Practices**: Configurations aligned with Azure's recommended guidelines.
+- **Customizable**: Easily adaptable to meet specific project requirements.
+- **Version Control**: Organized and versioned for easy maintenance and updates.
 
-If you want to learn more about creating good readme files then refer the following [guidelines](https://docs.microsoft.com/en-us/azure/DevOps/repos/git/create-a-readme?view=azure-DevOps). You can also seek inspiration from the below readme files:
-- [ASP.NET Core](https://github.com/aspnet/Home)
-- [Visual Studio Code](https://github.com/Microsoft/vscode)
-- [Chakra Core](https://github.com/Microsoft/ChakraCore)
+## Getting Started
+
+1. Clone the repository:
+    ```bash
+    git clone https://github.com/your-repo/ADO-build-templates.git
+    ```
+2. Review the available templates in the `templates` directory.
+3. Integrate the desired templates into your Azure DevOps pipeline YAML files.
+
+## Repository Structure
+
+```
+ADO-build-templates/
+├── templates/         # YAML templates for build and release pipelines
+├── examples/          # Example pipeline configurations
+├── docs/              # Documentation for templates and usage
+└── README.md          # Repository overview
+```
+
+## Usage
+
+1. Reference a template in your pipeline YAML file:
+    ```yaml
+    resources:
+      repositories:
+         - repository: templatesRepo
+            type: git
+            name: your-repo/ADO-build-templates
+
+    jobs:
+      - template: templates/build-template.yml@templatesRepo
+    ```
+2. Customize parameters as needed.
+
+## Contributing
+
+Contributions are welcome! Please follow these steps:
+1. Fork the repository.
+2. Create a new branch for your feature or bug fix.
+3. Submit a pull request with a detailed description of your changes.
+
+## License
+
+This repository is licensed under the [MIT License](LICENSE).
+
+## Support
+
+For questions or issues, please open an [issue](https://github.com/your-repo/ADO-build-templates/issues) in the repository.
+
+---
+By leveraging these templates, you can accelerate your development workflows and maintain consistency across your projects.
