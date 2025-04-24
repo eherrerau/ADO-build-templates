@@ -1,0 +1,17 @@
+parameters:
+- name: enableNpmBuild
+  default: false
+- name: preArgNpmBuild
+  default: ''
+- name: workingDirectory
+  default: .
+
+steps:
+- task: Npm@1
+  condition: eq('${{ parameters.enableNpmBuild }}', true)
+  displayName: 'npm build'
+  inputs:
+    command: custom
+    workingDir: ${{ parameters.workingDirectory }}
+    verbose: false
+    customCommand: ${{ parameters.preArgNpmBuild }} run build

@@ -1,0 +1,36 @@
+parameters:
+- name: enableCustomFeed
+  default: false
+- name: versionSpec
+  default: 6.x
+- name: restoreSolution
+  default: '**/*.sln'
+- name: vstsFeed
+  default: '70394981-0108-4f52-8232-b8bec808270e/4b824f24-7dd3-4112-8840-9886dda1285f'
+
+steps:
+- task: NuGetToolInstaller@1
+  displayName: Use NuGet 6.x
+  condition: |
+    and
+    (
+      eq('${{ parameters.enableCustomFeed }}', true),
+      succeeded()
+    )
+  inputs:
+    versionSpec: ${{ parameters.versionSpec }}
+    checkLatest: true
+
+- task: NuGetCommand@2
+  displayName: NuGet restore
+  condition: |
+    and
+    (
+      eq('${{ parameters.enableCustomFeed }}', true),
+      succeeded()      
+    )
+  inputs:
+    command: 'restore'
+    restoreSolution: ${{ parameters.restoreSolution }}
+    feedsToUse: 'select'
+    vstsFeed: ${{ parameters.vstsFeed }}

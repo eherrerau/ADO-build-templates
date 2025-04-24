@@ -1,0 +1,30 @@
+parameters:
+- name: 'preTest'
+  type: stepList
+  default: []
+- name: enableDotNetTest
+  default: false
+- name: testProjects
+  default: ''
+- name: 'postTest'
+  type: stepList
+  default: []
+- name: testArguments
+  default: '--configuration release --runtime win7-x64 --no-build'
+    
+steps:
+  - ${{ parameters.preTest}}
+  - task: DotNetCoreCLI@2
+    displayName: dotnet test
+    condition: |
+      and
+      (
+        eq('${{ parameters.enableDotNetTest }}', true),
+        ne('${{ parameters.testProjects }}', '')
+      )
+    inputs:
+      command: test
+      projects: ${{ parameters.testProjects }}
+      arguments: ${{ parameters.testArguments }}
+
+  - ${{ parameters.postTest }}

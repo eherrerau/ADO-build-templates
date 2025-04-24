@@ -1,0 +1,30 @@
+parameters:
+- name: enableDotNetPublish
+  default: false
+- name: arguments
+  default: '--configuration $(buildConfiguration) --output $(build.artifactstagingdirectory)'
+- name: projects
+  default: '*.csproj'
+- name: publishWebProjects
+  default: true
+- name: modifyOutputPath
+  default: false
+- name: zipAfterPublish
+  default: false
+
+steps:
+- task: DotNetCoreCLI@2
+  displayName: 'dotNet Publish'
+  condition: |
+    and
+    (
+      eq('${{ parameters.enableDotNetPublish }}', true),
+      succeeded()      
+    )
+  inputs:
+    command: publish
+    arguments: ${{ parameters.arguments }}
+    projects: ${{ parameters.projects }}
+    publishWebProjects: ${{ parameters.publishWebProjects }}
+    modifyOutputPath: ${{ parameters.modifyOutputPath }}
+    zipAfterPublish: ${{ parameters.zipAfterPublish }}

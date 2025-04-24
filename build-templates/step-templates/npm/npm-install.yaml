@@ -1,0 +1,17 @@
+parameters:
+- name: enableNpmInstall
+  default: false
+- name: postArgNpmInstall
+  default: ''
+- name: installWorkingDirectory
+  default: .
+
+steps:
+- task: Npm@1
+  condition: eq('${{ parameters.enableNpmInstall }}', true)
+  displayName: 'npm install'
+  inputs:
+    command: custom
+    workingDir: ${{ parameters.installWorkingDirectory }}
+    verbose: true
+    customCommand: install ${{ parameters.postArgNpmInstall }}

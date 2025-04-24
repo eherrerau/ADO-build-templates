@@ -1,0 +1,23 @@
+parameters:
+- name: enableVSBuild
+  default: false
+- name: solution
+  default: '**\*.sln'
+- name: platform
+  default: '$(BuildPlatform)'
+- name: configuration
+  default: '$(BuildConfiguration)'
+
+steps:
+- task: VSBuild@1
+  displayName: 'VS Build solution'
+  condition: |
+    and
+    (
+      eq('${{ parameters.enableVSBuild }}', true),
+      succeeded()
+    )
+  inputs:
+    solution: ${{ parameters.solution }}
+    platform: ${{ parameters.platform }}
+    configuration: ${{ parameters.configuration }}

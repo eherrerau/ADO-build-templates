@@ -1,0 +1,33 @@
+parameters:
+- name: enableSnykScan
+  default: false
+- name: snykserviceConnectionEndpoint
+  default: 'CompanyName_DE_Service_Conn'
+- name: failOnIssues
+  default: false
+- name: targetFile
+  default: ''
+- name: monitorOnBuild
+  default: true
+- name: testType
+  default: 'app'
+- name: organization
+  default: '214a3920-8d64-4c43-9b7e-c07373188bea'
+
+steps:
+- task: Snyk.snyk-security-scan.custom-build-release-task.SnykSecurityScan@1
+  displayName: 'Snyk scan for open source vulnerabilities'
+  continueOnError: true
+  condition: |
+    and
+    (
+      eq('${{ parameters.enableSnykScan }}', true),
+      succeeded()      
+    )
+  inputs:
+    serviceConnectionEndpoint: ${{ parameters.snykserviceConnectionEndpoint }}
+    failOnIssues: ${{ parameters.failOnIssues }}
+    targetFile: ${{ parameters.targetFile }}
+    monitorOnBuild: ${{ parameters.monitorOnBuild }}
+    testType: ${{ parameters.testType }}
+    organization: ${{ parameters.organization }}

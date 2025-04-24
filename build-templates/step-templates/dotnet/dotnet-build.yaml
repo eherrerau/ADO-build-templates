@@ -1,0 +1,22 @@
+parameters:
+- name: enableDotNetBuild
+  default: false
+- name: projects
+  default: '**/*.csproj'
+- name: 'buildArguments'
+  default: '--configuration $(buildConfiguration)'
+
+steps:
+  - task: DotNetCoreCLI@2
+    displayName: dotnet build
+    condition: |
+      and
+      (
+        eq('${{ parameters.enableDotNetBuild }}', true),
+        ne('${{ parameters.projects }}', ''),
+        succeeded()
+      )
+    inputs:
+      command: 'build'
+      projects: ${{ parameters.projects }}
+      arguments: ${{ parameters.buildArguments }}

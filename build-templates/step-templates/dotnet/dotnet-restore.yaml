@@ -1,0 +1,19 @@
+parameters:
+- name: enableDotNetRestore
+  default: false
+- name: vstsFeed
+  default: '70394981-0108-4f52-8232-b8bec808270e/4b824f24-7dd3-4112-8840-9886dda1285f'
+
+steps:
+- task: DotNetCoreCLI@2
+  displayName: 'dotnet restore'
+  condition: |
+    and
+    (
+      eq('${{ parameters.enableDotNetRestore }}', true),
+      succeeded()      
+    )
+  inputs:
+    command: restore
+    projects: '**/*.csproj '
+    vstsFeed: ${{ parameters.vstsFeed }}

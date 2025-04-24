@@ -1,0 +1,19 @@
+parameters:
+- name: enableCustomNpmCommand
+  default: false
+- name: stepDisplayName
+  default: ''
+- name: npmCommand
+  default: ''
+- name: workingDirectory
+  default: .
+
+steps:
+- task: Npm@1
+  condition: eq('${{ parameters.enableCustomNpmCommand }}', true)  
+  displayName: ${{ parameters.stepDisplayName }}
+  inputs:
+    command: custom
+    workingDir: ${{ parameters.workingDirectory }}
+    verbose: false
+    customCommand: ${{ parameters.npmCommand }}

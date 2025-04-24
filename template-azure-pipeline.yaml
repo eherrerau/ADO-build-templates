@@ -1,0 +1,46 @@
+### Place this template on your azure-pipelines.yaml files, then change the variables to fit every Function  App Project
+variables:
+  ### The name of the project being deployed ###
+  applicationName: OODE-FA-SBB
+  ### The highest .Net versions used by the projects in the repo ###
+  coreVersion: '7.0'
+  ### Application version, if new, insert 1.0 ###
+  version: '1.0'
+  
+  ${{ if or(eq(variables['Build.SourceBranchName'], 'main'), startsWith(variables['Build.SourceBranchName'], 'hotfix-')) }}:
+    version.prefix: ""
+    isMasterBranch: true
+  ${{ if and(ne(variables['Build.SourceBranchName'], 'main'), not(startsWith(variables['Build.SourceBranchName'], 'hotfix-'))) }}:
+    version.prefix: "pr-"
+    isMasterBranch: false
+
+trigger:
+- main
+resources:
+  repositories:
+    - repository: ADO-build-templates # Name of the repository
+      type: git
+      name: ADO-build-templates # Location of the build templates in ADO
+      ref: main # Branch that is being used for templates
+
+name: $(version.prefix)$(version).$(rev:r)
+jobs:
+- job: Job_1
+  displayName: Agent job 1
+  pool: 
+    name: Azure Pipelines
+    vmImage: 'ubuntu-latest'
+    workspace:
+      clean: all
+
+  steps:
+  - template: build-templates/fa-dotnet-build.yaml@ADO-build-templates
+    parameters:      
+    # DotNet Core Versions
+      enableDotNetCore: true
+      coreVersion: ${{ variables.coreVersion }}
+    # DotNet Build
+      enableDotNetBuild: true
+    # Custom Steps - Archive
+      archiveContinueOnError: false
+    # Custom Steps - Publish

@@ -1,0 +1,93 @@
+parameters:
+- name: command
+  default: ''
+- name: commandOptions
+  default: ''
+- name: commandOptionsInit
+  default: ''
+- name: commandOptionsValidate
+  default: ''
+- name: commandOptionsPlan
+  default: '-var-file=dev.tfvars --out=dev_plan.tfplan -lock=false'
+- name: commandOptionsApply
+  default: 'dev_plan.tfplan'
+- name: workingDirectory
+  default: 'terraform'
+- name: environmentServiceNameAzureRM
+  default: 'CompanyNameProduction'
+- name: backendServiceArm
+  default: 'CompanyNameProduction'
+- name: backendAzureRmResourceGroupName
+  default: ''
+- name: backendAzureRmStorageAccountName
+  default: ''
+- name: backendAzureRmContainerName
+  default: ''
+- name: backendAzureRmKey
+  default: ''
+- name: enableTerraformInit
+  default: true
+- name: enableTerraformValidate
+  default: true
+- name: enableTerraformPlan
+  default: true
+- name: enableTerraformApply
+  default: true
+  
+steps:
+## Copy the repo on the Agent
+- template: step-templates/git/git-checkout.yaml@ADO-build-templates
+### Install Terraform
+- template: step-templates/terraform/terraform-install.yaml@ADO-build-templates
+### Init
+- template: step-templates/terraform/terraform-command.yaml@ADO-build-templates
+  parameters: 
+    enableTerraformStep: ${{ parameters.enableTerraformInit }}
+    command: 'init'
+    workingDirectory: ${{ parameters.workingDirectory }}
+    commandOptions: ${{ parameters.commandOptionsInit }}
+    environmentServiceNameAzureRM: ${{ parameters.environmentServiceNameAzureRM }}
+    backendServiceArm: ${{ parameters.backendServiceArm }}  
+    backendAzureRmResourceGroupName: ${{ parameters.backendAzureRmResourceGroupName }}
+    backendAzureRmStorageAccountName: ${{ parameters.backendAzureRmStorageAccountName }}
+    backendAzureRmContainerName: ${{ parameters.backendAzureRmContainerName }}
+    backendAzureRmKey: ${{ parameters.backendAzureRmKey }}
+### Validate
+- template: step-templates/terraform/terraform-command.yaml@ADO-build-templates
+  parameters: 
+    enableTerraformStep: ${{ parameters.enableTerraformValidate }}
+    command: 'validate'
+    workingDirectory: ${{ parameters.workingDirectory }}
+    commandOptions: ${{ parameters.commandOptionsValidate }}
+    environmentServiceNameAzureRM: ${{ parameters.environmentServiceNameAzureRM }}
+    backendServiceArm: ${{ parameters.backendServiceArm }}  
+    backendAzureRmResourceGroupName: ${{ parameters.backendAzureRmResourceGroupName }}
+    backendAzureRmStorageAccountName: ${{ parameters.backendAzureRmStorageAccountName }}
+    backendAzureRmContainerName: ${{ parameters.backendAzureRmContainerName }}
+    backendAzureRmKey: ${{ parameters.backendAzureRmKey }}
+### Plan
+- template: step-templates/terraform/terraform-command.yaml@ADO-build-templates
+  parameters: 
+    enableTerraformStep: ${{ parameters.enableTerraformPlan }}
+    command: 'plan'
+    workingDirectory: ${{ parameters.workingDirectory }}
+    commandOptions: ${{ parameters.commandOptionsPlan}}
+    environmentServiceNameAzureRM: ${{ parameters.environmentServiceNameAzureRM }}
+    backendServiceArm: ${{ parameters.backendServiceArm }}  
+    backendAzureRmResourceGroupName: ${{ parameters.backendAzureRmResourceGroupName }}
+    backendAzureRmStorageAccountName: ${{ parameters.backendAzureRmStorageAccountName }}
+    backendAzureRmContainerName: ${{ parameters.backendAzureRmContainerName }}
+    backendAzureRmKey: ${{ parameters.backendAzureRmKey }}
+### Apply
+- template: step-templates/terraform/terraform-command.yaml@ADO-build-templates
+  parameters: 
+    enableTerraformStep: ${{ parameters.enableTerraformApply }}
+    command: 'apply'
+    workingDirectory: ${{ parameters.workingDirectory }}
+    commandOptions: ${{ parameters.commandOptionsApply}}
+    environmentServiceNameAzureRM: ${{ parameters.environmentServiceNameAzureRM }}
+    backendServiceArm: ${{ parameters.backendServiceArm }}  
+    backendAzureRmResourceGroupName: ${{ parameters.backendAzureRmResourceGroupName }}
+    backendAzureRmStorageAccountName: ${{ parameters.backendAzureRmStorageAccountName }}
+    backendAzureRmContainerName: ${{ parameters.backendAzureRmContainerName }}
+    backendAzureRmKey: ${{ parameters.backendAzureRmKey }}

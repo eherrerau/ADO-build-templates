@@ -1,0 +1,16 @@
+parameters:
+- name: enableNpmCacheClean
+  default: false
+- name: preArgNpmCacheClean
+- name: workingDirectory
+  default: .
+
+steps:
+- task: Npm@1
+  displayName: 'npm cache clean'
+  inputs:
+    command: custom
+    workingDir: ${{ parameters.workingDirectory }}
+    verbose: false
+    customCommand: ${{ parameters.preArgNpmCacheClean }} cache clean -force
+  condition: eq('${{ parameters.enableNpmCacheClean }}', true)

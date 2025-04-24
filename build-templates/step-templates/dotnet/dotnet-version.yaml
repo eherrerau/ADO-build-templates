@@ -1,0 +1,59 @@
+parameters:
+- name: enableDotNetCore
+  default: false
+- name: coreVersion
+  default: ''
+- name: coreSDKVersion
+  default: ''
+
+steps:
+  - powershell: |
+      $sdkversion = '${{ parameters.coreSDKVersion }}'
+      if ($sdkversion -eq '') {
+        if ('${{ parameters.coreVersion }}' -eq '2.0') {
+          $sdkversion="2.1.202"
+        }
+        elseif ('${{ parameters.coreVersion }}' -eq '2.1') {
+          $sdkversion="2.1.816"
+        }
+        elseif ('${{ parameters.coreVersion }}' -eq '2.2') {
+          $sdkversion="2.2.207"
+        }
+        elseif ('${{ parameters.coreVersion }}' -eq '3.0') {
+          $sdkversion="3.0.103"
+        }
+        elseif ('${{ parameters.coreVersion }}' -eq '3.1') {
+          $sdkversion="3.1.116"
+        }
+        elseif ('${{ parameters.coreVersion }}' -eq '5.0') {
+          $sdkversion="5.0.408"
+        }
+        elseif ('${{ parameters.coreVersion }}' -eq '6.0') {
+          $sdkversion="6.0.402"
+        }
+        elseif ('${{ parameters.coreVersion }}' -eq '7.0') {
+          $sdkversion="7.0.101"
+        }
+        else {
+          throw "Unknown Dot Net Core Version ${{ parameters.coreVersion }}"
+        }
+      }
+      write-host "Using SDK Version $sdkversion"
+      write-host "##vso[task.setvariable variable=coreversion]$sdkversion"
+    condition: | 
+      and
+      (
+      eq('${{ parameters.enableDotNetCore }}', true),
+      succeeded() 
+      )
+    displayName: Get .NET Core SDK Version
+  - task: UseDotNet@2
+    displayName: Use NET Core SDK
+    condition: | 
+      and
+      (
+      eq('${{ parameters.enableDotNetCore }}', true),
+      succeeded() 
+      )
+    inputs:
+      version: $(coreversion)

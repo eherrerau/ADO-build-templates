@@ -1,0 +1,135 @@
+## builds the Functions Apps in dotnet 
+parameters:
+# DotNet Core Versions
+- name: enableDotNetCore
+  default: true
+- name: coreVersion
+  default: ''
+- name: coreSDKVersion
+  default: ''
+
+# Nuget using custom feed (VSTS feed).
+# - name: enableCustomFeed
+#   default: false
+# - name: versionSpec
+#   default: 6.x
+# - name: restoreSolution
+#   default: '**/*.sln'
+# - name: vstsFeed
+#   default: '70394981-0108-4f52-8232-b8bec808270e/4b824f24-7dd3-4112-8840-9886dda1285f'
+
+# DotNet Restore
+- name: enableDotNetRestore
+  default: false
+
+# DotNet Build
+- name: enableDotNetBuild
+  default: true
+- name: projects
+  default: '**/*.csproj'
+- name: 'buildArguments'
+  default: '--configuration Release --output publish_output'
+
+# Snyk Scan
+- name: enableSnykScan
+  default: true
+- name: failOnIssues
+  default: false
+- name: targetFile
+  default: ''
+
+# Dotnet Publish
+- name: enableDotNetPublish
+  default: true
+- name: arguments
+  default: '--configuration $(buildConfiguration) --output $(build.artifactstagingdirectory)'
+- name: publishWebProjects
+  default: false
+- name: modifyOutputPath
+  default: false
+- name: zipAfterPublish
+  default: false
+
+# Custom Steps - Archive Files
+- name: enableArchiveFiles
+  default: true
+- name: archiveContinueOnError
+  default: false
+- name: rootFolderOrFile
+  default: "$(System.DefaultWorkingDirectory)/publish_output"
+- name: includeRootFolder
+  default: false
+- name: archiveFile
+  default: "$(System.DefaultWorkingDirectory)/build$(Build.BuildId).zip"
+
+# Custom Steps - Publish ARtifacts
+- name: enablePublishArtifacts
+  default: true
+- name: enablePrPublishArtifacts
+  default: false
+- name: pathtoPublish
+  default: '$(System.DefaultWorkingDirectory)/build$(Build.BuildId).zip'
+
+steps:
+### Download the repo
+- template: step-templates/git/git-checkout.yaml@ADO-build-templates
+
+### Install the desire version of .Net
+- template: step-templates/dotnet/dotnet-version.yaml@ADO-build-templates
+  parameters:
+    enableDotNetCore: ${{ parameters.enableDotNetCore }}
+    coreVersion: ${{ parameters.coreVersion }}
+    coreSDKVersion: ${{ parameters.coreSDKVersion }}
+
+### Add the nugets pagakes
+# - template: step-templates/nuget/nuget-config-customFeed.yaml@ADO-build-templates
+#   parameters:
+#     enableCustomFeed: ${{ parameters.enableCustomFeed }}
+#     restoreSolution: ${{ parameters.projects }}
+#     vstsFeed: ${{ parameters.vstsFeed }}
+#     versionSpec: ${{ parameters.versionSpec }}
+
+### DotNet Restore
+- template: step-templates/dotnet/dotnet-restore.yaml@ADO-build-templates
+  parameters: 
+    enableDotNetRestore: ${{ parameters.enableDotNetRestore }}
+
+### Build in .Net
+- template: step-templates/dotnet/dotnet-build.yaml@ADO-build-templates
+  parameters: 
+    enableDotNetBuild: ${{ parameters.enableDotNetBuild }}
+    projects: ${{ parameters.projects }}
+    buildArguments: ${{ parameters.buildArguments}}    
+
+### Runs Snyk
+- template: step-templates/security-scan/snyk-scan.yaml@ADO-build-templates
+  parameters:
+    enableSnykScan: ${{ parameters.enableSnykScan }}
+    failOnIssues: ${{ parameters.failOnIssues }}
+    targetFile: ${{ parameters.targetFile }}
+
+### Dotnet Publish
+- template: step-templates/dotnet/dotnet-publish.yaml@ADO-build-templates
+  parameters: 
+    enableDotNetPublish: ${{ parameters.enableDotNetPublish }}
+    arguments: ${{ parameters.arguments }}
+    projects: ${{ parameters.projects }}
+    publishWebProjects: ${{ parameters.publishWebProjects }}
+    modifyOutputPath: ${{ parameters.modifyOutputPath }}
+    zipAfterPublish: ${{ parameters.zipAfterPublish }}
+
+### Archive Files
+- template: step-templates/custom-steps/archive-files.yaml@ADO-build-templates
+  parameters:
+    enableArchiveFiles: ${{ parameters.enableArchiveFiles }}
+    archiveContinueOnError: ${{ parameters.archiveContinueOnError }}
+    rootFolderOrFile: ${{ parameters.rootFolderOrFile }}
+    includeRootFolder: ${{ parameters.includeRootFolder }}
+    archiveFile: ${{ parameters.archiveFile }}
+
+### Publish the artifacts
+- template: step-templates/custom-steps/publish-artifacts.yaml@ADO-build-templates
+  parameters:
+    enablePublishArtifacts: ${{ parameters.enablePublishArtifacts }}
+    enablePrPublishArtifacts: ${{ parameters.enablePrPublishArtifacts}}
+    pathtoPublish: ${{ parameters.pathtoPublish}}

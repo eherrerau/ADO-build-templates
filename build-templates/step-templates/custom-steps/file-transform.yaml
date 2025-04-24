@@ -1,0 +1,21 @@
+parameters:
+- name: enableFileTransform
+  default: false
+- name: description
+  default: ''
+- name: folderPath
+  default: '.'
+- name: fileType
+  default: json #json or xml are the only file types available.
+- name: targetFiles
+  default: |
+    '**/package.json'
+
+steps:
+- task: FileTransform@1
+  condition: eq('${{ parameters.enableFileTransform }}', true)
+  displayName: File Transform ${{ parameters.description }}
+  inputs:
+    folderPath: ${{ parameters.folderPath }}
+    fileType: ${{ parameters.fileType }}
+    targetFiles: ${{ parameters.targetFiles }}

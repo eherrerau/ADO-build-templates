@@ -1,0 +1,12 @@
+  - task: CopyFiles@2
+    displayName: 'Copy Files to: $(Build.ArtifactStagingDirectory)/terraform'
+    condition: and(succeeded(), eq(variables['Build.SourceBranchName'], 'main'))
+    inputs:
+      Contents: |
+        # Ignore dotted directories (like .git and .terraform)
+        !**/.*/**
+        # Ignore dotted files (like .gitignore)
+        !**/.*
+        # Include the terraform lock file
+        **/.terraform.lock.hcl
+      TargetFolder: '$(Build.ArtifactStagingDirectory)/terraform'

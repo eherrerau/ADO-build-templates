@@ -1,0 +1,16 @@
+parameters:
+- name: copyFilesContent
+- name: targetFolder
+  default: '$(Build.ArtifactStagingDirectory)'
+- name: enableCopyFiles
+  default: false
+
+steps:
+- task: CopyFiles@2
+  displayName: 'Copy Files to: $(Build.ArtifactStagingDirectory)'
+  condition: eq('${{ parameters.enableCopyFiles }}', true)
+  inputs:
+    SourceFolder: .
+    Contents: |
+      ${{ parameters.copyFilesContent }}
+    TargetFolder: ${{ parameters.targetFolder }}

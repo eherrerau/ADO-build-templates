@@ -1,0 +1,16 @@
+parameters:
+- name: enableNugetPush
+  default: false
+-name: publishVstsFeed
+  default: '70394981-0108-4f52-8232-b8bec808270e/4b824f24-7dd3-4112-8840-9886dda1285f'
+-name: allowPackageConflicts
+  default: true
+
+steps:
+- task: NuGetCommand@2
+  displayName: 'NuGet push'
+  condition: eq('${{ parameters.enableNugetPush }}', true)
+  inputs:
+    command: push
+    publishVstsFeed: ${{ parameters.publishVstsFeed }}
+    allowPackageConflicts: ${{ parameters.allowPackageConflicts }}

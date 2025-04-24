@@ -1,0 +1,35 @@
+parameters:
+- name: enablePublishArtifacts
+  default: true
+- name: enablePrPublishArtifacts
+  default: false
+- name: pathtoPublish
+  default: '$(build.artifactstagingdirectory)'
+- name: artifactName
+  default: 'drop'
+
+steps:
+- task: PublishBuildArtifacts@1
+  displayName: 'Publish Artifact: drop'
+  condition: |
+    and
+    (
+      eq('${{ parameters.enablePublishArtifacts }}', true),
+      succeeded(), 
+      or(eq(variables['Build.SourceBranchName'], 'main'), startsWith(variables['Build.SourceBranchName'], 'hotfix-'))
+    )
+  inputs:
+    pathtoPublish: ${{ parameters.pathtoPublish }}
+    artifactName: ${{ parameters.artifactName }}
+
+- task: PublishBuildArtifacts@1
+  displayName: 'PR Publish Artifact: drop'
+  condition: |
+    and
+    (
+      eq('${{ parameters.enablePrPublishArtifacts }}', true),
+      succeeded(), ne(variables['Build.SourceBranchName'], 'main')
+    )
+  inputs:
+    pathtoPublish: ${{ parameters.pathtoPublish }}
+    artifactName: ${{ parameters.artifactName }}

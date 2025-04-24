@@ -1,0 +1,41 @@
+parameters:
+- name: workingDirectory
+  default: terraform
+- name: command
+  default: ''
+- name: commandOptions
+  default: ''
+- name: environmentServiceNameAzureRM
+  default: 'CompanyNameProduction'
+- name: backendServiceArm
+  default: 'CompanyNameProduction'
+- name: backendAzureRmResourceGroupName
+  default: 'resourceGroupName'
+- name: backendAzureRmStorageAccountName
+  default: 'pe2oastoblb02'
+- name: backendAzureRmContainerName
+  default: 'terraform-state'
+- name: backendAzureRmKey
+  default: 'terraform.tfstate'
+- name: enableTerraformStep
+  default: true
+
+steps:
+- task: ms-devlabs.custom-terraform-tasks.custom-terraform-release-task.TerraformTaskV3@3
+  displayName: 'Terraform :  ${{ parameters.command }}'
+  condition: |
+    and
+    (
+      eq('${{ parameters.enableTerraformStep }}', true),
+      succeeded()      
+    )
+  inputs:
+    workingDirectory: terraform
+    command: ${{ parameters.command }}
+    commandOptions: ${{ parameters.commandOptions }}
+    environmentServiceNameAzureRM: ${{ parameters.environmentServiceNameAzureRM }}
+    backendServiceArm: ${{ parameters.backendServiceArm }}
+    backendAzureRmResourceGroupName: ${{ parameters.backendAzureRmResourceGroupName }}
+    backendAzureRmStorageAccountName: ${{ parameters.backendAzureRmStorageAccountName }}
+    backendAzureRmContainerName: ${{ parameters.backendAzureRmContainerName }}
+    backendAzureRmKey: ${{ parameters.backendAzureRmKey }}

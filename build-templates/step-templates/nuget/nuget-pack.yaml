@@ -1,0 +1,25 @@
+parameters:
+- name: enableNugetPack
+  default: false
+- name: nugetPackage
+  default: ''
+
+steps:
+  - task: NuGetCommand@2
+    displayName: Nuget Pack
+    condition: |
+      and
+      (
+        eq('${{ parameters.enableNugetPack }}', true),
+        ne('${{ parameters.nugetPackage }}', ''),
+        succeeded(), or(eq(variables['Build.SourceBranchName'], 'main'), startsWith(variables['Build.SourceBranchName'], 'hotfix-'))
+      )
+    inputs:
+      command: 'pack'
+      searchPatternPack: |
+        ${{ parameters.nugetPackage }}
+      configurationToPack: release
+      packDestination: '$(Build.ArtifactStagingDirectory)\nuget'
+      outputDir: $(Build.ArtifactStagingDirectory)\nuget
+      versioningScheme: 'byBuildNumber'
+      buildProperties: packageVersion=$(build.buildNumber)

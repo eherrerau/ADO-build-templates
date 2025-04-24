@@ -1,0 +1,17 @@
+parameters:
+- name: enableNpmCleanInstall
+  default: false
+- name: preArgNpmCleanInstall
+  default: ''
+- name: workingDirectory
+  default: .
+  
+steps:
+- task: Npm@1
+  condition: eq('${{ parameters.enableNpmCleanInstall }}', true)
+  displayName: 'npm ci'
+  inputs:
+    command: custom
+    workingDir: ${{ parameters.workingDirectory }}
+    verbose: false
+    customCommand: ${{ parameters.preArgNpmCleanInstall }} ci

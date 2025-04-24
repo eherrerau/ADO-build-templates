@@ -1,0 +1,22 @@
+parameters:
+- name: azureSubscription
+  default: 'CompanyNameProduction'
+- name: appType
+  default: 'webAppLinux'
+- name: WebAppName
+  default: ''
+- name: StartupCommand
+  default: ''
+- name: packageForLinux
+  default: '$(build.artifactstagingdirectory)'
+  #'$(System.DefaultWorkingDirectory)/**/*.zip'
+
+steps:
+- task: AzureRmWebAppDeployment@4
+  displayName: 'Deploy Azure App Service'
+  inputs:
+    azureSubscription: ${{ parameters.azureSubscription }}
+    appType: ${{ parameters.azureSubscription }}
+    WebAppName: ${{ parameters.azureSubscription }}
+    StartupCommand: ${{ parameters.azureSubscription }}
+    packageForLinux: ${{ parameters.packageForLinux }}

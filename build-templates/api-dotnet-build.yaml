@@ -1,0 +1,133 @@
+## builds the AppService or API's in dotnet 
+parameters:
+# DotNet Core Versions
+- name: enableDotNetCore
+  default: true
+- name: coreVersion
+  default: ''
+- name: coreSDKVersion
+  default: ''
+
+# Nuget using custom feed (VSTS feed).
+- name: enableCustomFeed
+  default: false
+- name: versionSpec
+  default: 6.x
+- name: restoreSolution
+  default: '**/*.sln'
+- name: vstsFeed
+  default: '70394981-0108-4f52-8232-b8bec808270e/4b824f24-7dd3-4112-8840-9886dda1285f'
+
+## Runs 'npm install'
+- name: enableNpmInstall
+  default: false
+- name: installWorkingDirectory
+  default: .
+
+## Runs 'npm build'
+- name: enableNpmBuild
+  default: false
+- name: workingDirectory
+  default: .
+
+# DotNet Build
+- name: enableDotNetBuild
+  default: true
+- name: projects
+  default: '**/*.csproj'
+- name: 'buildArguments'
+  default: '--output publish_output --configuration Release'
+
+# Snyk Scan
+- name: enableSnykScan
+  default: true
+- name: failOnIssues
+  default: false
+- name: targetFile
+  default: ''
+
+# Dotnet Publish
+- name: enableDotNetPublish
+  default: true
+- name: zipAfterPublish
+  default: true
+
+# Custom Steps - Archive
+# - name: enableArchiveFiles
+#   default: false
+# - name: archiveContinueOnError
+#   default: false
+# - name: rootFolderOrFile
+#   default: 'publish_output/'
+# - name: includeRootFolder
+#   default: false
+
+# Custom Steps - Publish Artifact
+- name: enablePublishArtifacts
+  default: true
+- name: enablePrPublishArtifacts
+  default: false
+
+steps:
+# ## Copy the repo on the Agent
+# - template: step-templates/git/git-checkout.yaml@ADO-build-templates
+
+## Select the .Net Version to be used
+- template: step-templates/dotnet/dotnet-version.yaml@ADO-build-templates
+  parameters:
+    enableDotNetCore: ${{ parameters.enableDotNetCore }}
+    coreVersion: ${{ parameters.coreVersion }}
+    coreSDKVersion: ${{ parameters.coreSDKVersion }}
+
+## Use the custom feed in ADO for downloading the Nuget Pacakges
+- template: step-templates/nuget/nuget-config-customFeed.yaml@ADO-build-templates
+  parameters:
+    enableCustomFeed: ${{ parameters.enableCustomFeed }}
+    restoreSolution: ${{ parameters.projects }}
+    vstsFeed: ${{ parameters.vstsFeed }}
+    versionSpec: ${{ parameters.versionSpec }}
+
+## Runs 'npm install'
+- template: step-templates/npm/npm-install.yaml@ADO-build-templates
+  parameters:
+    enableNpmInstall: ${{ parameters.enableNpmInstall }}
+    installWorkingDirectory: ${{ parameters.installWorkingDirectory }}
+
+## Runs 'npm build'
+- template: step-templates/npm/npm-build.yaml@ADO-build-templates
+  parameters:
+    enableNpmBuild: ${{ parameters.enableNpmBuild}}
+    workingDirectory: ${{ parameters.workingDirectory }}
+
+## Runs 'dotnet build'
+- template: step-templates/dotnet/dotnet-build.yaml@ADO-build-templates
+  parameters: 
+    enableDotNetBuild: ${{ parameters.enableDotNetBuild }}
+    projects: ${{ parameters.projects }}
+    buildArguments: ${{ parameters.buildArguments}}   
+
+## Runs Snyk
+- template: step-templates/security-scan/snyk-scan.yaml@ADO-build-templates
+  parameters:
+    enableSnykScan: ${{ parameters.enableSnykScan }}
+    failOnIssues: ${{ parameters.failOnIssues }}
+    targetFile: ${{ parameters.targetFile }}
+
+## Runs dotnet publish
+- template: step-templates/dotnet/dotnet-publish.yaml@ADO-build-templates
+  parameters:
+    enableDotNetPublish: ${{ parameters.enableDotNetPublish }}
+    zipAfterPublish: ${{ parameters.zipAfterPublish }}
+
+# ## Archive - Comprese into a zip file'
+# - template: step-templates/custom-steps/archive-files.yaml@ADO-build-templates
+#   parameters:
+#     archiveContinueOnError: ${{ parameters.archiveContinueOnError }}
+#     rootFolderOrFile: ${{ parameters.rootFolderOrFile }}
+#     includeRootFolder: ${{ parameters.includeRootFolder }}
+    
+## Publish the artifact
+- template: step-templates/custom-steps/publish-artifacts.yaml@ADO-build-templates
+  parameters:
+    enablePublishArtifacts: ${{ parameters.enablePublishArtifacts }}
+    enablePrPublishArtifacts: ${{ parameters.enablePrPublishArtifacts}}

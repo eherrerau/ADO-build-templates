@@ -1,0 +1,14 @@
+parameters:
+- name: versionSpec
+  default: 6.x
+
+steps:
+- task: NuGetToolInstaller@1
+  displayName: Use NuGet 6.x
+  inputs:
+    versionSpec: ${{ parameters.versionSpec }}
+    checkLatest: true
+- task: NuGetCommand@2
+  displayName: NuGet restore
+  inputs:
+    selectOrConfig: config

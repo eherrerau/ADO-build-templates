@@ -1,0 +1,31 @@
+parameters:
+- name: enablePrPublishSymbols
+  default: false
+- name: enablePublishSymbols
+  default: true
+
+steps:
+  - task: PublishSymbols@2
+    displayName: Publish symbols path
+    condition: |
+      and(
+        eq('${{ parameters.enablePublishSymbols }}', true),
+        succeeded(), or(eq(variables['Build.SourceBranchName'], 'main'), startsWith(variables['Build.SourceBranchName'], 'hotfix-'))
+        )
+    inputs:
+      SymbolServerType: FileShare
+      SymbolsPath: '\\mtnam.org\IT\DevBuildSymbols'
+      SymbolsArtifactName: Symbols_$(Build.Configuration)
+      
+  - task: PublishSymbols@2
+    displayName: PR Publish symbols path
+    condition: |
+     and
+     (
+       eq('${{ parameters.enablePrPublishSymbols }}', true),
+       succeeded(), ne(variables['Build.SourceBranchName'], 'main')
+      )
+    inputs:
+      SymbolServerType: FileShare
+      SymbolsPath: '\\mtnam.org\IT\DevBuildSymbols'
+      SymbolsArtifactName: Symbols_$(Build.Configuration)

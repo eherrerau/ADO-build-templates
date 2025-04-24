@@ -1,0 +1,41 @@
+parameters:
+## Nuget using custom feed (VSTS feed).
+- name: enableCustomFeed
+  default: false
+- name: versionSpec
+  default: 6.x
+- name: restoreSolution
+  default: '**/*.sln'
+- name: vstsFeed
+  default: '70394981-0108-4f52-8232-b8bec808270e/4b824f24-7dd3-4112-8840-9886dda1285f'
+
+# ## Set Assembly Manifest Data
+# - name: enableAssembly
+#   default: false
+# - name: Path
+#   default: ''
+# - name: Product
+# - name: Description
+# - name: Company
+#   default: 'CompanyName'
+# - name: Copyright
+#   default: 'Copyright © $(date:YYYY) $(date:DD.MM.YYYY DD MMMM YYYY HH:mm a)  CompanyName 2023'
+# - name: Trademark
+#   default: 'CompanyName, Data Engineering Department'
+# - name: VersionNumber
+# - name: FileVersionNumber
+# - name: InformationalVersion
+
+## Nuget restore
+
+## VS Build Solution
+
+  ## Nuget Pack
+- name: enableNugetPack
+  default: true
+  ## Copy files
+- name: enableCopyFiles
+    default: true
+
+  ## Nuget Push
+- name: 

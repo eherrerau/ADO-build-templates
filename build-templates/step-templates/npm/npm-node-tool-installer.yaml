@@ -1,0 +1,15 @@
+parameters:
+- name: nodeVersion
+  default: 6.x
+- name: checkLatest
+  default: true
+- name: enableNodeToolInstaller
+  default: false
+
+steps:
+- task: NodeTool@0
+  displayName: Use Node ${{ parameters.nodeVersion }}
+  inputs:
+    versionSpec:  ${{ parameters.nodeVersion }}
+    checkLatest: ${{ parameters.checkLatest }}
+  enabled: ${{ parameters.enableNodeToolInstaller }}

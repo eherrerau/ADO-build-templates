@@ -1,0 +1,22 @@
+parameters:
+- name: enableArchiveFiles
+  default: false
+- name: archiveContinueOnError
+  default: false
+- name: rootFolderOrFile
+  default: "$(System.DefaultWorkingDirectory)/publish_output"
+- name: includeRootFolder
+  default: false
+- name: archiveFile
+  default: "$(System.DefaultWorkingDirectory)/build$(Build.BuildId).zip"
+
+steps:
+- task: ArchiveFiles@2
+  displayName: 'Archive files'
+  continueOnError: ${{ parameters.archiveContinueOnError }}
+  condition: |
+      eq('${{ parameters.enableArchiveFiles }}', true)     
+  inputs:
+    rootFolderOrFile: ${{ parameters.rootFolderOrFile }}
+    includeRootFolder: ${{ parameters.includeRootFolder }}
+    archiveFile: ${{ parameters.archiveFile }}
