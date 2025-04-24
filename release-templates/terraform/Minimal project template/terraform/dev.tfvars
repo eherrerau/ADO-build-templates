@@ -1,9 +1,9 @@
 ## Common Tags
-CreatedBy      = "eduardo.herrera@CompanyName.com"
-department     = "Data Engineering"
+CreatedBy      = "userEmail@CompanyName.com"
+department     = "DepartmentName"
 environment    = "dev"
-primaryOwner   = "dschulz@CompanyName.com"
-secondaryOwner = "eduardo.herrera@CompanyName.com"
+primaryOwner   = "owner@CompanyName.com"
+secondaryOwner = "userEmail@CompanyName.com"
 
 ## generic
 location        = "eastus2"

@@ -318,5 +318,4 @@ https://dev.azure.com/CompanyName/ProjectName/_release?definitionId=41&view=mine
 
 ## ✍️ Authors <a name = "authors"></a>
 
-- [eduardo.herrera@CompanyName.com](mailto:eduardo.herrera@CompanyName.com) - Creator of the templates & pipelines.
-- [patrick.hughes@CompanyName.com](mailto:patrick.hughes@CompanyName.com) - IT and mainteiner.
+- [userEmail@CompanyName.com](mailto:userEmail@CompanyName.com) - Creator of the templates & pipelines.

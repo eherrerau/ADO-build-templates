@@ -10,7 +10,7 @@ parameters:
 - name: Copyright
   default: 'Copyright © $(date:YYYY) $(date:DD.MM.YYYY DD MMMM YYYY HH:mm a)  CompanyName 2023'
 - name: Trademark
-  default: 'CompanyName, Data Engineering Department'
+  default: 'CompanyName, DepartmentName Department'
 - name: VersionNumber
 - name: FileVersionNumber
 - name: InformationalVersion
@@ -30,7 +30,7 @@ steps:
     Description: 'A nuget package for different utils to extract data of CompanyName'
     Company: 'CompanyName'
     Copyright: 'Copyright © $(date:YYYY) $(date:DD.MM.YYYY DD MMMM YYYY HH:mm a)  CompanyName 2019'
-    Trademark: 'CompanyName, Data Engineering Department'
+    Trademark: 'CompanyName, DepartmentName Department'
     VersionNumber: '1.0.$(Build.BuildId)'
     FileVersionNumber: '1.0.*.*'
     InformationalVersion: '$(SourceBranchName)'

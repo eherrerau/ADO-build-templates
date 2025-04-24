@@ -1,7 +1,7 @@
 ###  Common tags ####
 variable "CreatedBy" {
   type        = string
-  default     = "eduardo.herrera@CompanyName.com"
+  default     = "userEmail@CompanyName.com"
   description = "Name of the person who created the resource"
 }
 
