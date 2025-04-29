@@ -60,3 +60,5 @@ For questions or issues, please open an [issue](https://github.com/your-repo/ADO
 
 ---
 By leveraging these templates, you can accelerate your development workflows and maintain consistency across your projects.
+
+Thanks for your support.
